@@ -5,7 +5,8 @@ import "fmt"
 func main() {
 	// stringPractice()
 	// typeConverionPractice()
-	declarePractice()
+	// declarePractice()
+	constPractice()
 }
 
 func stringPractice() { // string 연습
@@ -66,4 +67,16 @@ func declarePractice() { // 타입 선언 연습
 	another, other := 3000, 4000 // another 재할당
 	fmt.Println(another)
 	fmt.Println(other)
+}
+
+func constPractice() { // 상수 연습
+	var xVar = 3
+	fmt.Println(xVar)
+	xVar += 1
+	fmt.Println(xVar)
+
+	const xConst = 3
+	fmt.Println(xConst)
+	// xConst += 1 // 컴파일 에러 발생
+	fmt.Print(xConst)
 }
