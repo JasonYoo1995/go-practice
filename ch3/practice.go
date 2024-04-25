@@ -5,13 +5,15 @@ import "fmt"
 // 복합 타입
 
 func main() {
-	// array()
-	// slice()
-	// capacity()
-	// makePractice()
-	// slicing()
-	// slicingWithAppend()
-	slicingWithAppend2()
+	array()
+	slice()
+	capacity()
+	makePractice()
+	slicing()
+	slicingWithAppend()
+	slicingWithout3rdArgument()
+	fmt.Println()
+	slicingWith3rdArgument()
 }
 
 func array() {
@@ -115,15 +117,21 @@ func slicingWithAppend() {
 	fmt.Println(cap(x), cap(y))
 }
 
-func slicingWithAppend2() {
+func slicingWithout3rdArgument() { // 원본 슬라이스(x)의 사용되지 않은 수용력은 모든 하위 슬라이스에 공유된다
 	x := make([]int, 0, 5)
 	fmt.Println(x, len(x), cap(x))
 
 	x = append(x, 1, 2, 3, 4)
 	fmt.Println(x, len(x), cap(x))
 
-	y := x[:2] // y[4]에 해당하는 메모리 위치는 다른 슬라이스에 공유하지 않음
-	z := x[2:] // z[2]에 해당하는 메모리 위치는 다른 슬라이스에 공유하지 않음
+	y := x[:2]
+	z := x[2:]
+	// x[0]는 y[0]에 공유된다
+	// x[1]는 y[1]에 공유된다
+	// x[2]는 y[2]와 z[0]에 공유된다
+	// x[3]는 y[3]와 z[1]에 공유된다
+	// x[4]는 y[4]에 공유된다
+
 	fmt.Println(x, y, z)
 	fmt.Println("len : ", len(x), len(y), len(z))
 	fmt.Println("cap : ", cap(x), cap(y), cap(z))
@@ -140,9 +148,66 @@ func slicingWithAppend2() {
 	fmt.Println("len : ", len(x), len(y), len(z))
 	fmt.Println("cap : ", cap(x), cap(y), cap(z))
 
+	// 새로 할당된 z[2]는 x[4]와 y[4]에 공유된다
 	z = append(z, 70)
 	fmt.Println(x, y, z)
 	fmt.Println("len : ", len(x), len(y), len(z))
 	fmt.Println("cap : ", cap(x), cap(y), cap(z))
 	fmt.Println("비교 : ", x[4], y[4], z[2])
+
+	x[0] = 10
+	y[1] = 20
+	fmt.Println(x, y, z)
+}
+
+// 완전한 슬라이스 연산 (Full Slice Expression)
+//   - 용량이 안 바뀌면 공유
+//   - 용량이 바뀌면 새로운 슬라이스로 deep copy
+func slicingWith3rdArgument() {
+	x := make([]int, 0, 5)
+	fmt.Println(x, len(x), cap(x))
+
+	x = append(x, 1, 2, 3, 4)
+	fmt.Println(x, len(x), cap(x))
+
+	/*
+		* x[a:b:c]에서 각 인자의 의미
+		 - a: 시작 인덱스
+		 - b: 끝 인덱스 (해당 인덱스는 포함되지 않음)
+		 - c: 용량(capacity) 지정
+
+		* 예시
+		 - x[a:b]는 x 슬라이스의 인덱스 a부터 b-1까지를 선택합니다.
+		 - x[a:b:c]는 x 슬라이스의 인덱스 a부터 b-1까지를 선택하며, 용량을 c-a로 설정합니다. 이렇게 함으로써 슬라이스의 길이와 용량을 제어할 수 있습니다.
+	*/
+
+	y := x[:2:2]
+	z := x[2:4:4]
+	fmt.Println(x, y, z)
+	fmt.Println("len : ", len(x), len(y), len(z))
+	fmt.Println("cap : ", cap(x), cap(y), cap(z))
+
+	y[0] = 100 // 공유됨 (용량이 안 바뀐 상황)
+	fmt.Println(x, y, z)
+
+	y = append(y, 30, 40, 50) // 공유 안 됨 (용량이 바뀐 상황)
+	fmt.Println(x, y, z)
+	fmt.Println("len : ", len(x), len(y), len(z))
+	fmt.Println("cap : ", cap(x), cap(y), cap(z))
+
+	y[1] = 200 // 공유 안 됨 (용량이 바뀐 상황)
+	fmt.Println(x, y, z)
+
+	x = append(x, 60)
+	fmt.Println(x, y, z)
+	fmt.Println("len : ", len(x), len(y), len(z))
+	fmt.Println("cap : ", cap(x), cap(y), cap(z))
+
+	z = append(z, 70)
+	fmt.Println(x, y, z)
+	fmt.Println("len : ", len(x), len(y), len(z))
+	fmt.Println("cap : ", cap(x), cap(y), cap(z))
+
+	y[0] = 10
+	fmt.Println(x, y, z)
 }
