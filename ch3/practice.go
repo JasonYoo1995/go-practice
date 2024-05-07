@@ -5,15 +5,23 @@ import "fmt"
 // 복합 타입
 
 func main() {
-	array()
-	slice()
-	capacity()
-	makePractice()
-	slicing()
-	slicingWithAppend()
-	slicingWithout3rdArgument()
-	fmt.Println()
-	slicingWith3rdArgument()
+	// array()
+	// slice()
+	// capacity()
+	// makePractice()
+	// slicing()
+	// slicingWithAppend()
+	// slicingWithout3rdArgument()
+	// fmt.Println()
+	// slicingWith3rdArgument()
+
+	/* 여기부터 3.3*/
+	// stringPractice()
+	// conversion()
+	// mapPractice()
+	// ok()
+	// mapSet()
+	structPractice()
 }
 
 func array() {
@@ -210,4 +218,139 @@ func slicingWith3rdArgument() {
 
 	y[0] = 10
 	fmt.Println(x, y, z)
+}
+
+/* 여기부터 3.3*/
+
+func stringPractice() {
+	var s string = "Hello there"
+	var b byte = s[6]
+	fmt.Println(b) // t = 116
+
+	var s2 string = s[4:7]
+	var s3 string = s[:5]
+	var s4 string = s[6:]
+	fmt.Println(s, "/", s2, "/", s3, "/", s4)
+
+	s4 = "there2"
+	fmt.Println(s, "/", s2, "/", s3, "/", s4)
+
+	var ss string = "Hello 😍" // "Hello XXXX" 처럼 😍는 4바이트를 차지
+	var ss2 string = ss[4:7]
+	var ss3 string = ss[:5]
+	var ss4 string = ss[6:]
+	fmt.Println(ss, "/", ss2, "/", ss3, "/", ss4)
+
+	fmt.Println(len(s), len(ss))
+
+	var ss5 string = ss[4:10]
+	fmt.Println(ss5)
+}
+
+func conversion() {
+	var a rune = 'x'
+	var s string = string(a)
+	var b byte = 'y'
+	var s2 string = string(b)
+	fmt.Println(s, s2)
+
+	var ss string = "Hello, 😝"
+	var bs []byte = []byte(ss)
+	var rs []rune = []rune(ss)
+	fmt.Println(bs)
+	fmt.Println(rs)
+	fmt.Println(len(bs), len(rs))
+}
+
+func mapPractice() {
+	var nilMap map[string]int // write 불가 (패닉 발생)
+	fmt.Println(nilMap)
+	fmt.Println(nilMap["any"])
+
+	totalWins := map[string]int{} // write 가능
+	fmt.Println(totalWins)
+	fmt.Println(totalWins["any"])
+	totalWins["any"] = 1
+	fmt.Println(totalWins["any"])
+
+	teams := map[string][]string{
+		"Orcas":   []string{"Fred", "Ralph", "Bijou"},
+		"Lions":   []string{"Sarah", "Peter", "Billie"},
+		"Kittens": []string{"Waldo", "Raul", "Ze"},
+	}
+	fmt.Println(teams)
+	fmt.Println(teams["any"])
+	fmt.Println(teams["orcas"])
+	fmt.Println(teams["Orcas"])
+	fmt.Println(teams["Lions"][0])
+	fmt.Println(teams["Lions"][2])
+
+	ages := make(map[int][]string, 3)
+	ages[10] = []string{"배움", "순수", "성장"}
+	ages[20] = []string{"젊음", "패기", "열정"}
+	ages[30] = []string{"책임", "도전", "성숙"}
+	ages[40] = []string{"건강", "요령", "리더십"}
+	fmt.Println(ages)
+}
+
+func ok() {
+	m := map[string]int{
+		"hello": 5,
+		"world": 0,
+	}
+
+	v, ok := m["hello"]
+	fmt.Println(v, ok)
+
+	v2, ok := m["world"]
+	fmt.Println(v2, ok)
+
+	v3, ok := m["goodbye"]
+	fmt.Println(v3, ok)
+}
+
+func mapSet() {
+	intSet := map[int]bool{}
+	vals := []int{5, 10, 2, 5, 8, 7, 3, 9, 1, 2, 10}
+	for _, v := range vals {
+		intSet[v] = true
+	}
+
+	fmt.Println(len(vals), len(intSet))
+	fmt.Println(intSet[5])
+	fmt.Println(intSet[500])
+	if intSet[100] {
+		fmt.Println("100 is in the set")
+	}
+}
+
+func structPractice() {
+	type firstPerson struct {
+		name string
+		age  int
+	}
+	f := firstPerson{
+		name: "Bob",
+		age:  50,
+	}
+	var g struct {
+		name string
+		age  int
+	}
+	g = f
+	fmt.Println(f == g)
+
+	g.name = "Tom"
+	fmt.Println(f == g)
+
+	anonymous := struct {
+		name string
+		age  int
+	}{
+		name: "Bob",
+		age:  50,
+	}
+	fmt.Println(f == anonymous)
+
+	fmt.Println(f, g, anonymous)
 }
